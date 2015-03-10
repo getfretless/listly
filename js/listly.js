@@ -5,9 +5,18 @@ var Listly = function() {
     self.tasks = [];
 
     function addTask(task_name) {
-      self.tasks.push(task_name);
+      // All of this...
+      // var properties = {};
+      // properties.name = task_name;
+      // var task = new Task(properties);
+      // self.tasks.push(task);
+
+      // Is equivalent to these two line
+      var task = new Task({ name: task_name });
+      self.tasks.push(task);
+
       if (save()) {
-        appendToList(task_name);
+        appendToList(task);
         return true;
       }
       else {
@@ -15,13 +24,13 @@ var Listly = function() {
       }
     }
 
-    function appendToList(task_name) {
+    function appendToList(task) {
       // Grab a copy of the list item template.
       var li = $('#list_item_template').clone();
       li.removeAttr('id');
 
       // Add the task name to the LI's label.
-      li.find('label').text(task_name);
+      li.find('label').text(task.name);
 
       // Unhide the new LI.
       li.removeClass('hidden');
@@ -29,19 +38,8 @@ var Listly = function() {
       // Activate the delete button.
       li.find('.btn-danger').click(function() {
         // Remove it from the array
-        self.tasks.splice(self.tasks.indexOf(task_name), 1);
+        self.tasks.splice(self.tasks.indexOf(task), 1);
 
-        // The above does the same thing as all of this...
-        // $.each(self.tasks, function(index, current_task) {
-        //   if (current_task === task_name) {
-        //     self.tasks.splice(index, 1);
-        //
-        //     // Stop looking once we find a match
-        //     return false;
-        //   }
-        // });
-
-        // Save the array to local storage.
         save();
 
         // Remove it from the <ol>.
@@ -70,8 +68,8 @@ var Listly = function() {
     function load() {
       if (supportsLocalStorage() && localStorage.tasks) {
         self.tasks = JSON.parse(localStorage.tasks);
-        $.each(self.tasks, function(index, task_name) {
-          appendToList(task_name);
+        $.each(self.tasks, function(index, task) {
+          appendToList(task);
         });
       }
     }
