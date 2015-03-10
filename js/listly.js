@@ -29,9 +29,20 @@ var Listly = function() {
       // Activate the delete button.
       li.find('.btn-danger').click(function() {
         // Remove it from the array
+        self.tasks.splice(self.tasks.indexOf(task_name), 1);
 
+        // The above does the same thing as all of this...
+        // $.each(self.tasks, function(index, current_task) {
+        //   if (current_task === task_name) {
+        //     self.tasks.splice(index, 1);
+        //
+        //     // Stop looking once we find a match
+        //     return false;
+        //   }
+        // });
 
         // Save the array to local storage.
+        save();
 
         // Remove it from the <ol>.
         li.remove();
