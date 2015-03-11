@@ -23,5 +23,16 @@ var Task = function() {
     this.id = getOrSetId(properties.id);
   }
 
+  Task.getTaskById = function(id) {
+    var task;
+    $.each(listly.tasks, function(index, current_task) {
+      if (current_task.id == id) {
+        task = current_task;
+        return false;
+      }
+    });
+    return task;
+  };
+
   return Task;
 }();
