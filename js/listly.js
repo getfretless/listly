@@ -25,32 +25,50 @@ var Listly = function() {
     }
 
     function appendToList(task) {
-      // Grab a copy of the list item template.
-      var li = $('#list_item_template').clone();
+      var li, label, checkbox;
+      li = $('#list_item_template').clone();
       li.removeAttr('id');
 
       li.addClass('task');
       li.attr('data-task-id', task.id);
-      li.find('label').append(' ' + task.name);
+
+      label = li.find('label');
+      label.append(' ' + task.name);
+
+      if (task.completed) {
+        label.find('input[type=checkbox]').attr('checked', true);
+        label.addClass('completed');
+      }
 
       // Unhide the new LI.
       li.removeClass('hidden');
 
-      // Activate the delete button.
+      // Setup event handlers.
       li.find('button.delete').click(function() {
         self.tasks.splice(self.tasks.indexOf(task), 1);
         save();
         li.remove();
       });
 
-      // Activate the edit button.
       li.find('button.edit').click(task, createEditForm);
 
-      // Sets up the event handler on all button.edit elements,
-      // including those that are not yet on the page.
-      // $('body').on('click', 'button.edit', function() { });
+      li.find('input[type=checkbox]').change(toggleTaskCompletion);
 
       $('#tasks').append(li);
+    }
+
+    function toggleTaskCompletion(ev) {
+      var checkbox = $(this);
+      var task_id = checkbox.closest('li.task').data('task-id');
+      var task = getTaskById(task_id);
+      task.completed = checkbox.prop('checked');
+      if (task.completed) {
+        checkbox.closest('label').addClass('completed');
+      }
+      else {
+        checkbox.closest('label').removeClass('completed');
+      }
+      save();
     }
 
     function createEditForm(ev) {
