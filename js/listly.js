@@ -42,14 +42,12 @@ var Listly = function() {
         li.remove();
       });
 
-
-      $('body').on('click', 'button.edit', function() {
-
-      });
-
-
       // Activate the edit button.
       li.find('button.edit').click(task, createEditForm);
+
+      // Sets up the event handler on all button.edit elements,
+      // including those that are not yet on the page.
+      // $('body').on('click', 'button.edit', function() { });
 
       $('#tasks').append(li);
     }
@@ -66,6 +64,23 @@ var Listly = function() {
 
       li.find('label').replaceWith(edit_form);
       name_field.focus().select();
+
+      // Save button handler
+      edit_form.submit(updateTask);
+    }
+
+    function updateTask(ev) {
+      ev.preventDefault();
+      var field = $(this.elements.task_name);
+      var id = field.data('task-id');
+
+      $.each(self.tasks, function(index, task) {
+        if (task.id == id) {
+          task.name = field.val();
+          return false;
+        }
+      });
+      save();
     }
 
     function showFormError(form) {
