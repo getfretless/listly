@@ -36,24 +36,41 @@ var Listly = function() {
       li.removeClass('hidden');
 
       // Activate the delete button.
-      li.find('.btn-danger').click(function() {
-        // Remove it from the array
+      li.find('button.delete').click(function() {
         self.tasks.splice(self.tasks.indexOf(task), 1);
-
         save();
-
-        // Remove it from the <ol>.
         li.remove();
       });
+
+
+      $('body').on('click', 'button.edit', function() {
+
+      });
+
+
+      // Activate the edit button.
+      li.find('button.edit').click(task, createEditForm);
 
       $('#tasks').append(li);
     }
 
+    function createEditForm(ev) {
+      var task, li, edit_form, name_field;
+      task = ev.data;
+      li = $(this).closest('li');
+
+      edit_form = $('#edit_form_template').clone().removeAttr('id');
+      edit_form.removeClass('hidden');
+      name_field = edit_form.find('.edit-task-name');
+      name_field.data('task-id', task.id).val(task.name);
+
+      li.find('label').replaceWith(edit_form);
+      name_field.focus().select();
+    }
+
     function showFormError(form) {
       // add message inside alert div
-      $(form).find('.alert')
-        .html('Aww, <em>cuss</em>! Something went wrong')
-        .removeClass('hidden');
+      $(form).find('.alert').removeClass('hidden');
     }
 
     function supportsLocalStorage() {
@@ -67,8 +84,11 @@ var Listly = function() {
 
     function load() {
       if (supportsLocalStorage() && localStorage.tasks) {
-        self.tasks = JSON.parse(localStorage.tasks);
-        $.each(self.tasks, function(index, task) {
+        var task;
+        var task_objects = JSON.parse(localStorage.tasks);
+        $.each(task_objects, function(index, task_properties) {
+          task = new Task(task_properties);
+          self.tasks.push(task);
           appendToList(task);
         });
       }
