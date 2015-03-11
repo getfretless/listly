@@ -5,13 +5,6 @@ var Listly = function() {
     self.tasks = [];
 
     function addTask(task_name) {
-      // All of this...
-      // var properties = {};
-      // properties.name = task_name;
-      // var task = new Task(properties);
-      // self.tasks.push(task);
-
-      // Is equivalent to these two line
       var task = new Task({ name: task_name });
       self.tasks.push(task);
 
