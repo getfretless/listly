@@ -31,7 +31,7 @@ var Listly = function() {
 
       li.addClass('task');
       li.attr('data-task-id', task.id);
-      li.find('label').text(task.name);
+      li.find('label').append(' ' + task.name);
 
       // Unhide the new LI.
       li.removeClass('hidden');
@@ -87,7 +87,10 @@ var Listly = function() {
       task.name = field.val();
 
       if (save()) {
-        $(this).siblings('label').text(field.val());
+        var label = $(this).siblings('label');
+        var checkbox = label.find('input[type=checkbox]');
+        label.text(' ' + field.val());
+        label.prepend(checkbox);
         removeEditForm(this);
       }
     }
