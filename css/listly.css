@@ -8,4 +8,5 @@ label.completed {
 }
 label {
   width: 80%;
+  word-wrap: break-word;
 }
